@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="firestore_database_id" translatable="false">ai-studio-android-holocomm-ee0bc7d2-162d-446a-8db8-b4ce6ef8a89a</string>
+    <string name="recaptcha_site_key" translatable="false">6Lf_TRwuAAAAAKsFqCTJo2_w1A77kmQSL6lPVvF1</string>
+</resources>

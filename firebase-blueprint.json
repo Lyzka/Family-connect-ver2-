@@ -1,0 +1,352 @@
+{
+  "entities": {
+    "GlobalOperatorPresence": {
+      "title": "GlobalOperatorPresence",
+      "description": "Global real-time presence document in /global_presence/{userId} allowing multiple devices/accounts to discover online operators.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UID of the authenticated Google operator (must match request.auth.uid)."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Operator display name or tactical handle."
+        },
+        "callSign": {
+          "type": "string",
+          "description": "Generated sci-fi LCARS call-sign for the device/operator."
+        },
+        "presence": {
+          "type": "string",
+          "enum": ["ONLINE", "OFFLINE", "TYPING", "BUSY"],
+          "description": "Real-time availability state."
+        },
+        "statusMessage": {
+          "type": "string",
+          "description": "Optional short tactical status or active room indicator."
+        },
+        "e2eeFingerprint": {
+          "type": "string",
+          "description": "Public SHA-256 / AES-GCM key verification fingerprint."
+        },
+        "deviceModel": {
+          "type": "string",
+          "description": "Optional device identifier for multi-device telemetry."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "displayName",
+        "callSign",
+        "presence",
+        "e2eeFingerprint",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "GlobalRoomMessage": {
+      "title": "GlobalRoomMessage",
+      "description": "Shared multi-device message or control signal inside /global_comms_rooms/{roomId}/messages/{messageId}.",
+      "type": "object",
+      "properties": {
+        "roomId": {
+          "type": "string",
+          "description": "Deterministic room identifier (alphabetically sorted userA_userB)."
+        },
+        "senderId": {
+          "type": "string",
+          "description": "UID of the authenticated sender (must match request.auth.uid on create)."
+        },
+        "recipientId": {
+          "type": "string",
+          "description": "Target peer UID or channel ID."
+        },
+        "senderLabel": {
+          "type": "string",
+          "description": "Display call-sign of the sender."
+        },
+        "text": {
+          "type": "string",
+          "description": "Message body, caption, or control signal summary."
+        },
+        "messageType": {
+          "type": "string",
+          "enum": [
+            "TEXT",
+            "VOICE_NOTE",
+            "IMAGE",
+            "FILE",
+            "CONTROL_SIGNAL",
+            "WEBRTC_OFFER",
+            "WEBRTC_ANSWER",
+            "WEBRTC_ICE"
+          ],
+          "description": "Payload type supporting text, media, control signals, and WebRTC packets."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["SENT", "DELIVERED", "READ"],
+          "description": "Delivery receipt status updated across devices."
+        },
+        "isEncrypted": {
+          "type": "boolean",
+          "description": "True if payload is encrypted with AES-256-GCM."
+        },
+        "mediaUri": {
+          "type": "string",
+          "description": "Optional URI for voice notes or media attachments."
+        },
+        "audioDurationMs": {
+          "type": "integer",
+          "description": "Optional voice note duration in milliseconds."
+        },
+        "cipherHex": {
+          "type": "string",
+          "description": "Optional AES-GCM IV + ciphertext hex preview."
+        },
+        "modelBadge": {
+          "type": "string",
+          "description": "Optional transport or AI badge."
+        },
+        "signalPayload": {
+          "type": "string",
+          "description": "Optional raw SDP, ICE candidate, or control signal payload."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "roomId",
+        "senderId",
+        "recipientId",
+        "senderLabel",
+        "text",
+        "messageType",
+        "status",
+        "isEncrypted",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "GlobalRtcSignal": {
+      "title": "GlobalRtcSignal",
+      "description": "Shared multi-device WebRTC signaling packet inside /global_comms_rooms/{roomId}/rtc_signals/{signalId}.",
+      "type": "object",
+      "properties": {
+        "roomId": {
+          "type": "string",
+          "description": "Deterministic room identifier (userA_userB)."
+        },
+        "senderId": {
+          "type": "string",
+          "description": "UID of the caller/signaling peer."
+        },
+        "recipientId": {
+          "type": "string",
+          "description": "UID of the remote peer."
+        },
+        "callType": {
+          "type": "string",
+          "enum": ["AUDIO", "VIDEO"],
+          "description": "Audio or holographic video WebRTC session."
+        },
+        "signalType": {
+          "type": "string",
+          "enum": ["RINGING", "SDP_OFFER", "SDP_ANSWER", "ICE_CANDIDATE", "CONNECTED", "ENDED"],
+          "description": "WebRTC signaling state transition."
+        },
+        "sdpPayload": {
+          "type": "string",
+          "description": "SDP offer or answer body."
+        },
+        "iceCandidate": {
+          "type": "string",
+          "description": "Latest serialized ICE candidate."
+        },
+        "iceCandidatesCount": {
+          "type": "integer",
+          "description": "Total negotiated ICE candidates."
+        },
+        "isEncrypted": {
+          "type": "boolean",
+          "description": "True if DTLS-SRTP + AES-256-GCM encryption is active."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "roomId",
+        "senderId",
+        "recipientId",
+        "callType",
+        "signalType",
+        "sdpPayload",
+        "iceCandidate",
+        "iceCandidatesCount",
+        "isEncrypted",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HoloMessage": {
+      "title": "HoloMessage",
+      "description": "User-scoped message archive in /users/{userId}/messages/{messageId}.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "peerId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderLabel": { "type": "string" },
+        "text": { "type": "string" },
+        "messageType": {
+          "type": "string",
+          "enum": ["TEXT", "VOICE_NOTE", "IMAGE", "FILE"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["SENT", "DELIVERED", "READ"]
+        },
+        "isFromMe": { "type": "boolean" },
+        "isEncrypted": { "type": "boolean" },
+        "mediaUri": { "type": "string" },
+        "audioDurationMs": { "type": "integer" },
+        "cipherHex": { "type": "string" },
+        "modelBadge": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId",
+        "peerId",
+        "senderId",
+        "senderLabel",
+        "text",
+        "messageType",
+        "status",
+        "isFromMe",
+        "isEncrypted",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HoloPeerPresence": {
+      "title": "HoloPeerPresence",
+      "description": "User-scoped contact state in /users/{userId}/peers/{peerId}.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "peerId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "presence": {
+          "type": "string",
+          "enum": ["ONLINE", "OFFLINE", "TYPING"]
+        },
+        "unreadCount": { "type": "integer" },
+        "lastMessagePreview": { "type": "string" },
+        "isAiFallbackEnabled": { "type": "boolean" },
+        "e2eeFingerprint": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId",
+        "peerId",
+        "displayName",
+        "presence",
+        "unreadCount",
+        "lastMessagePreview",
+        "isAiFallbackEnabled",
+        "e2eeFingerprint",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HoloRtcSession": {
+      "title": "HoloRtcSession",
+      "description": "User-scoped WebRTC session in /users/{userId}/rtc_sessions/{sessionId}.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "peerId": { "type": "string" },
+        "callType": { "type": "string", "enum": ["AUDIO", "VIDEO"] },
+        "callState": {
+          "type": "string",
+          "enum": ["RINGING", "OFFER", "ANSWER", "CONNECTED", "ENDED"]
+        },
+        "sdpOffer": { "type": "string" },
+        "sdpAnswer": { "type": "string" },
+        "iceCandidatesCount": { "type": "integer" },
+        "latestIceCandidate": { "type": "string" },
+        "isEncrypted": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId",
+        "peerId",
+        "callType",
+        "callState",
+        "sdpOffer",
+        "sdpAnswer",
+        "iceCandidatesCount",
+        "latestIceCandidate",
+        "isEncrypted",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/global_presence/{userId}": {
+      "schema": { "$ref": "#/entities/GlobalOperatorPresence" },
+      "description": "Global operator presence directory readable by all authenticated operators and writable only by the owner."
+    },
+    "/global_comms_rooms/{roomId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/GlobalRoomMessage" },
+      "description": "Shared multi-device communication channel for text, voice notes, media, and control signals."
+    },
+    "/global_comms_rooms/{roomId}/rtc_signals/{signalId}": {
+      "schema": { "$ref": "#/entities/GlobalRtcSignal" },
+      "description": "Shared multi-device WebRTC SDP offer/answer and ICE candidate signaling subcollection."
+    },
+    "/users/{userId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/HoloMessage" },
+      "description": "User-scoped local/AI message log."
+    },
+    "/users/{userId}/peers/{peerId}": {
+      "schema": { "$ref": "#/entities/HoloPeerPresence" },
+      "description": "User-scoped contact metadata."
+    },
+    "/users/{userId}/rtc_sessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/HoloRtcSession" },
+      "description": "User-scoped WebRTC session log."
+    }
+  }
+}
